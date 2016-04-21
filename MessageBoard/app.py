@@ -1,5 +1,5 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, request, flash, redirect, url_for
+import uuid
 from cassandra_functions import init_db, view_messages_c, send_message_c
 
 app = Flask(__name__)
@@ -25,7 +25,7 @@ def view_messages():
 
 @app.route('/post_message', methods=['POST'])
 def post_message():
-    send_message_c(2, request.form['text'])
+    send_message_c(uuid.uuid4(), request.form['text'])
     flash('Message Sent')
     return redirect(url_for('send_message'))
 
@@ -34,4 +34,6 @@ def send_message():
     return render_template('send_message.html')
 
 if __name__ == '__main__':
+    app.secret_key = 'secret key'
+    app.debug = True
     app.run()
