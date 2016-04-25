@@ -1,6 +1,6 @@
 # CSSE433pmb
 
-# week 2
+## week 2
 
 Jiaren Wu
 1 Fix the servers, make 2 DB connected
