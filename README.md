@@ -3,7 +3,7 @@
 ## week 2
 
 Jiaren Wu
-1 Fix the servers, make 2 DB connected
+1 Fix the servers, make 2 DB connected\n
 2 dEploy PMB
 2.5 login/Logout
 
