@@ -88,7 +88,7 @@ In a terminal window
 1. Check the version of Java is installed (latest version of Oracle Java 8 is recommended)
     ```bash
     $ java -version
-    ```  
+    ```
 2. Download the Cassandra 3.x form Datastax Distribution:
     ```bash
     $ curl -L http://downloads.datastax.com/datastax-ddc/datastax-ddc-version_number-bin.tar.gz | tar xz
