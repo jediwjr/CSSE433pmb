@@ -34,9 +34,22 @@ SELECT * FROM research_table;
 ```
 
 
+#### Data Model 
 
+<!--(
+##### Keyspace [2]
+The outermost grouping of data, similar to a schema in a relational database. All tables go inside a keyspace. A keyspace is the defining container for replication.
 
+##### Table [2]
+A table stores data based on a primary key, which consists of a partition key and optional clustering columns.
+  * A partition key defines the node on which the data is stored.
+  * A clustering column defines the order of data stored in a row.
+  * A primary key is used to access the data in the table.
+  ![alt text](http://docs.datastax.com/en/landing_page/doc/landing_page/images/table.png "Table In Cassandra")
+)-->
 
 
 
 [1]: http://cassandra.apache.org
+[2]: http://docs.datastax.com/en/landing_page/doc/landing_page/dataModeling.html
+[3]: http://docs.datastax.com/en/landing_page/doc/landing_page/images/table.png
