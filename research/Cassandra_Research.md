@@ -84,7 +84,9 @@ Notice that the main principle in designing the table is not the relationship of
   * Python 2.7
 
 **Procedure**
-In a terminal window
+
+In a terminal window:
+
 1. Check the version of Java is installed (latest version of Oracle Java 8 is recommended)
     ```bash
     $ java -version
