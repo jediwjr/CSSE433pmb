@@ -14,6 +14,7 @@ Cassandra consistently outperforms popular NoSQL alternatives in benchmarks and 
 ##### Durable
 Cassandra is suitable for applications that can't afford to lose data, even when an entire data center goes down.
 
-'''sql
-
-'''
+```sql
+CREATE KEYSPACE MyKeySpace
+  WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
+```
