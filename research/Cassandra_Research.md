@@ -76,6 +76,28 @@ These are two simple queries; more examples will be shown to illustrate data mod
 Notice that the main principle in designing the table is not the relationship of the table to other tables, as it is in relational database modeling. Data in Cassandra is often arranged as one query per table, and data is repeated amongst many tables, a process known as denormalization. Relational databases instead normalize data, removing as much duplication as possible. The relationship of the entities is important, because the order in which data is stored in Cassandra can greatly affect the ease and speed of data retrieval. The schema design captures much of the relationship between entities by including related attributes in the same table. Client-side joins in application code is used only when table schema cannot capture the complexity of the relationships.
 
 
+## Installation
+##### Tarball installation of Cassandra 3.x on Linux-based platform
+**Prerequisites**
+  * Linux-based platform
+  * Lastest version of Java platform
+  * Python 2.7
+
+**Procedure**\
+In a terminal window
+1. Check the version of Java is installed (latest version of Oracle Java 8 is recommended)
+    ```bash
+    $ java -version
+    ```  
+2. Download the Cassandra 3.x form Datastax Distribution:
+    ```bash
+    $ curl -L http://downloads.datastax.com/datastax-ddc/datastax-ddc-version_number-bin.tar.gz | tar xz
+    ```  
+    or from Planet Cassandra http://www.planetcassandra.org/cassandra  
+    Please **replace 3.x to the version number you want to install**
+
+
+
 [1]: http://cassandra.apache.org
 [2]: http://docs.datastax.com/en/landing_page/doc/landing_page/dataModeling.html
 [3]: http://docs.datastax.com/en/cql/3.3/cql/ddl/dataModelingApproach.html
