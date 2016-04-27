@@ -81,17 +81,20 @@ Notice that the main principle in designing the table is not the relationship of
 **Procedure**
 In a terminal window
 1. Check the version of Java is installed (latest version of Oracle Java 8 is recommended)
+
     ```bash
     $ java -version
     ```
     
 2. Download the Cassandra 3.x form Datastax Distribution:
+
     ```bash
     $ curl -L http://downloads.datastax.com/datastax-ddc/datastax-ddc-version_number-bin.tar.gz | tar xz
     ```  
     or from Planet Cassandra http://www.planetcassandra.org/cassandra  
     
     Please **replace 3.x to the version number you want to install**
+    
 3. Untar the file:
 
    ```bash
