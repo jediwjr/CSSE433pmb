@@ -93,19 +93,26 @@ In a terminal window
     
     Please **replace 3.x to the version number you want to install**
 3. Untar the file:
+
    ```bash
    $ tar -xvzf datastax-ddc-version_number-bin.tar.gz
    ```
+
 4. To configure Cassandra, go to the install/conf directory:
+
     ```bash
     $ cd datastax-ddc-version_number/conf
     ```
+
 5. Start Cassandra in a single-node cluster:
+
     ```bash
     $ cd install_location
     $ bin/cassandra ## use -f to start Cassandra in the foreground
     ```
+
 6. Verify that Cassandra is running:
+
     ```bash
     $ cd install_location
     $ bin/nodetool status
