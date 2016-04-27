@@ -2,9 +2,7 @@
 ## Intruduction
 Cassandra is an open-source decentralized database with scalability and high availability without compromising performance. Cassandra's data model offers the convenience of column indexes with the performance of log-structured updates, strong support for denormalization and materialized views, and powerful built-in caching. Furthermore, Cassandra supports MapReduce and query language. 
 
-
 #### Main Features [1]
-
 ##### Fault Tolerant
 Data is automatically replicated to multiple nodes for fault-tolerance. Replication across multiple data centers is supported. Failed nodes can be replaced with no downtime.
 
@@ -19,7 +17,6 @@ Cassandra is suitable for applications that can't afford to lose data, even when
 
 ##### Query Language
 CQL provides an API to Cassandra that is simpler than the Thrift API. The Thrift API and legacy versions of CQL expose the internal storage structure of Cassandra. CQL adds an abstraction layer that hides implementation details of this structure and provides native syntaxes for collections and other common encodings.
-
 ```sql
 CREATE KEYSPACE research_demo
   WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 3 };
@@ -32,7 +29,6 @@ INSERT INTO research_table (id, Last, First) VALUES ('36b6c939-2459-4c24-a1ed-84
 
 SELECT * FROM research_table;
 ```
-
 
 #### Data Model [3]
 
@@ -47,7 +43,6 @@ A table stores data based on a primary key, which consists of a partition key an
   * A primary key is used to access the data in the table.
   ![alt text](http://docs.datastax.com/en/landing_page/doc/landing_page/images/table.png "Table In Cassandra")
 )-->
-
 Data modeling is a process that involves identifying the entities (items to be stored) and the relationships between entities. To create your data model, identify the patterns used to access data and the types of queries to be performed. These two ideas inform the organization and structure of the data, and the design and creation of the database's tables. Indexing the data can improve performance in some cases, so decide which columns will have secondary indexes.
 
 Data modeling in Cassandra uses a query-driven approach, in which specific queries are the key to organizing the data. Queries are the result of selecting data from a table; schema is the definition of how data in the table is arranged. Cassandra's database design is based on the requirement for fast reads and writes, so the better the schema design, the faster data is written and retrieved.
@@ -76,7 +71,7 @@ These are two simple queries; more examples will be shown to illustrate data mod
 Notice that the main principle in designing the table is not the relationship of the table to other tables, as it is in relational database modeling. Data in Cassandra is often arranged as one query per table, and data is repeated amongst many tables, a process known as denormalization. Relational databases instead normalize data, removing as much duplication as possible. The relationship of the entities is important, because the order in which data is stored in Cassandra can greatly affect the ease and speed of data retrieval. The schema design captures much of the relationship between entities by including related attributes in the same table. Client-side joins in application code is used only when table schema cannot capture the complexity of the relationships.
 
 
-## Installation
+## Installation [4]
 ##### Tarball installation of Cassandra 3.x on Linux-based platform
 **Prerequisites**
   * Linux-based platform
@@ -84,9 +79,7 @@ Notice that the main principle in designing the table is not the relationship of
   * Python 2.7
 
 **Procedure**
-
-In a terminal window:
-
+In a terminal window
 1. Check the version of Java is installed (latest version of Oracle Java 8 is recommended)
     ```bash
     $ java -version
@@ -99,9 +92,39 @@ In a terminal window:
     or from Planet Cassandra http://www.planetcassandra.org/cassandra  
     
     Please **replace 3.x to the version number you want to install**
+3. Untar the file:
+   ```bash
+   $ tar -xvzf datastax-ddc-version_number-bin.tar.gz
+   ```
+4. To configure Cassandra, go to the install/conf directory:
+    ```bash
+    $ cd datastax-ddc-version_number/conf
+    ```
+5. Start Cassandra in a single-node cluster:
+    ```bash
+    $ cd install_location
+    $ bin/cassandra ## use -f to start Cassandra in the foreground
+    ```
+6. Verify that Cassandra is running:
+    ```bash
+    $ cd install_location
+    $ bin/nodetool status
+    ```
+    ```bash
+    Datacenter: datacenter1
+    =======================
+    Status=Up/Down 
+    |/ State=Normal/Leaving/Joining/Moving
+    --  Address             Load       Tokens  Owns    Host ID                                   Rack
+    UN  127.0.0.147.66 KB   47.66 KB   256     100%    aaa1b7c1-6049-4a08-ad3e-3697a0e30e10  rack1
+    ```
 
+For installation on a specific opeartion system, please refer [installation manual].
 
+   
 
 [1]: http://cassandra.apache.org
 [2]: http://docs.datastax.com/en/landing_page/doc/landing_page/dataModeling.html
 [3]: http://docs.datastax.com/en/cql/3.3/cql/ddl/dataModelingApproach.html
+[4]: http://docs.datastax.com/en/cassandra/3.x/cassandra/install/installTarball.html
+[installation manual]: http://docs.datastax.com/en/cassandra/3.x/cassandra/install/installTOC.html
