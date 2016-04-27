@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  <title>Welcome to Message Board!</title>
+</head>
+<body>
+  <h1>Welcome to Message board</h1>
+  <a href="{{ url_for('login') }}">Log in</a></br>
+  <a href="{{ url_for('signup') }}">Sign up</a></br>
+  <a href="{{ url_for('view_messages') }}">View messages</a></br>
+  <a href="{{ url_for('send_message') }}">Send a message</a></br>
+</body>
+</html>
