@@ -80,8 +80,8 @@ Notice that the main principle in designing the table is not the relationship of
 
 **Procedure**
 In a terminal window
-1. Check the version of Java is installed (latest version of Oracle Java 8 is recommended)
 
+1. Check the version of Java is installed (latest version of Oracle Java 8 is recommended)
     ```bash
     $ java -version
     ```
@@ -94,7 +94,7 @@ In a terminal window
     or from Planet Cassandra http://www.planetcassandra.org/cassandra  
     
     Please **replace 3.x to the version number you want to install**
-    
+
 3. Untar the file:
 
    ```bash
@@ -125,7 +125,7 @@ In a terminal window
     =======================
     Status=Up/Down 
     |/ State=Normal/Leaving/Joining/Moving
-    --  Address             Load       Tokens  Owns    Host ID                                   Rack
+    --  Address             Load       Tokens  Owns    Host ID                               Rack
     UN  127.0.0.147.66 KB   47.66 KB   256     100%    aaa1b7c1-6049-4a08-ad3e-3697a0e30e10  rack1
     ```
 
