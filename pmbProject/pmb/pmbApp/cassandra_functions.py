@@ -1,6 +1,6 @@
 from cassandra.cluster import Cluster
 
-cluster = Cluster()
+cluster = Cluster('137.112.40.139')
 session = cluster.connect()
 
 def init_db():
