@@ -4,10 +4,12 @@
 
 Steven Rasp
   1. editing message
+
 Jiaren Wu
   1. deleting message
   2. connect 3 nodes
   3. try to move log-in function to server
+
 Zhi xue hao
   1.location
   2.mini-project
