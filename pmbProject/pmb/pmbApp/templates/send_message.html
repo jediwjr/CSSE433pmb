@@ -1,10 +1,6 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Send Message</title>
-</head>
-<body>
+{% extends "template.html" %}
+<title>Send Message</title>
+{% block body %}
 <form action="{{ url_for('post_message') }}" method=post class=send-msg>
   <dl>
     <dt>Text:
@@ -12,5 +8,4 @@
     <dd><input type=submit value=Send>
   </dl>
 </form>
-</body>
-</html>
+{% endblock %}

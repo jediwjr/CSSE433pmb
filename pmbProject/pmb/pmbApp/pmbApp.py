@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import (Flask, render_template, request, flash, redirect, url_for, 
+session)
 import uuid
 from cassandra_functions import init_db, view_messages_c, send_message_c
 
@@ -11,7 +12,16 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    error = None
+    if request.method == 'POST':
+        session['logged_in'] = True
+        return redirect(url_for('.index'))
+    return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('.index'))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():

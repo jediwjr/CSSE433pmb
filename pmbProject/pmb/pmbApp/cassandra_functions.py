@@ -1,9 +1,12 @@
 from cassandra.cluster import Cluster
 
-cluster = Cluster()
+cluster = Cluster(['137.112.104.138'], 9042)
 session = cluster.connect()
 
 def init_db():
+  #if cluster == None:
+  #	cluster = Cluster()
+  #	session = cluster.connect()
   session.execute("""
   CREATE KEYSPACE IF NOT EXISTS messageboard
   WITH REPLICATION={ 'class': 'SimpleStrategy', 'replication_factor' : 1 };
@@ -11,7 +14,7 @@ def init_db():
   session.execute("USE messageboard")
   session.execute("""
   CREATE TABLE IF NOT EXISTS messages (
-    message_id int PRIMARY KEY,
+    message_id uuid PRIMARY KEY,
     message_content text
   )
   """)
@@ -24,4 +27,4 @@ def send_message_c(m_id,text):
   INSERT INTO messages (message_id, message_content) 
   VALUES (%s, %s)
   """,
-  (m_id, text))
+(m_id,text))
