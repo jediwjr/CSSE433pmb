@@ -1,14 +1,80 @@
+html {
+  background: url(corkboard_background.jpg) no-repeat center center fixed;
+  background-size: cover;
+}
+
 h1 {
   text-align: center;
 }
 
+body {
+  color: white;
+  margin:0;
+  padding:0;
+}
+
 .page {
-  background-color:#FFFFCC;
   font-size:12pt;
+  height:100%;
+  width:100%;
+}
+
+.page a:link {
+  color: yellow;
+}
+
+.page a:visited {
+  color: orange;
+}
+
+.page a:hover {
+  color: white;
 }
 
 .nav {
+  float:top;
+  width:100%;
   background-color:#B8B8B8;
   text-align: right;
 }
 
+.nav a:link {
+  color: blue;
+}
+
+.nav a:visited {
+  color: purple;
+}
+
+.nav a:hover {
+  color: green;
+}
+
+.message_flash {
+  color: red;
+}
+
+.post_message {
+  background-color: #FFFFCC;
+  color: black;
+  width: 200px;
+  height: 200px;
+  float:left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.post_message input {
+  display: none;
+}
+
+.post_message:hover input {
+  display: block;
+  float:right;
+}
+
+.row {
+  width: 1200px;
+  height: 200px;
+  margin-bottom: 10px;
+}

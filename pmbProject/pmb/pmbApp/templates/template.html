@@ -11,5 +11,14 @@
     <a href="{{ url_for('signup') }}">Sign up</a>
     <a href="{{ url_for('.index') }}">Home</a>
   </div>
-  {% block body %}{% endblock %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <u1 class='flashes'>
+        {% for message in messages %}
+          <div class="message_flash">{{ message }}</div>
+        {% endfor %}
+      </u1>
+    {% endif %}
+  {% endwith %}
+{% block body %}{% endblock %}
 </div>
