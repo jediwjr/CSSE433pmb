@@ -1,0 +1,60 @@
+{% extends "template.html" %}
+<title>Send Geo Message</title>
+{% block body %}
+<form action="{{ url_for('post_message') }}" method=post class=send-msg>
+    <dl>
+        <dt>Text:
+        <dd><textarea name=text  rows=5 cols=40></textarea>
+        <dd><input type=submit value=Send>
+    </dl>
+</form>
+
+<head>
+    <script type="text/javascript">
+// Lets use the google maps image API.
+function googleMaps() {
+
+    // Check if geolocation is supported
+    if(!navigator.geolocation) {
+        throw 'Geolocation not supported';
+    }
+
+    // Create an img tag
+    var img = document.createElement('img');
+
+    // Get current position
+    navigator.geolocation.getCurrentPosition(getPos);
+
+    // Append our image to div map
+    document.getElementById("map").appendChild(img);
+
+    // get lat/long and create our img source
+    function getPos(pos) {
+        var lat = pos.coords.latitude;
+        var long = pos.coords.longitude;
+
+        // Our image src
+        var url = "http://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + long + "&zoom=14&size=400x400&sensor=false"
+
+            // Add url to our image src
+            img.src = url;
+    }
+
+}
+
+function load() {
+    var btn = document.getElementById("googleMaps");
+    btn.addEventListener("click", googleMaps, false);
+}
+
+// Fire this event listener when document is loaded.
+document.addEventListener("DOMContentLoaded", load, false);
+
+    </script>
+</head>
+<body>
+    <button id="googleMaps">Get Maps</button>
+    <div id="map">
+    </div>
+</body>
+{% endblock %}

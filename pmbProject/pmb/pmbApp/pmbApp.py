@@ -1,4 +1,4 @@
-from flask import (Flask, render_template, request, flash, redirect, url_for, 
+from flask import (Flask, render_template, request, flash, redirect, url_for,
 session)
 import uuid
 from cassandra_functions import init_db, view_messages_c, send_message_c
@@ -38,6 +38,10 @@ def post_message():
     send_message_c(uuid.uuid4(), request.form['text'])
     flash('Message Sent')
     return redirect(url_for('send_message'))
+
+@app.route('/send_geo', methods=['get'])
+def send_geo():
+    return render_template('send_geo.html')
 
 @app.route('/send_message', methods=['GET'])
 def send_message():
