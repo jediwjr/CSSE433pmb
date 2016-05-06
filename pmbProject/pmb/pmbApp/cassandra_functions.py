@@ -14,6 +14,8 @@ def init_db():
   CREATE TABLE IF NOT EXISTS messages (
     message_id uuid PRIMARY KEY,
     message_content text,
+    lon text,
+    lat text,
     message_sender text
   )
   """)
@@ -21,22 +23,22 @@ def init_db():
 def view_messages_c():
   return session.execute("SELECT * FROM messages")
 
-def send_message_c(m_id,text, username):
-  session.execute("""
-  INSERT INTO messages (message_id, message_content, message_sender)
-  VALUES (%s, %s, %s)
+def send_message_c(m_id,text, username, lat, lon:
+        session.execute("""
+  INSERT INTO messages (message_id, message_content, lon, lat, message_sender)
+  VALUES (%s, %s, %s, %s, %s)
   """,
-  (m_id, text, username))
+  (m_id, text,lon,lat username))
 
-def edit_message_c(m_id, newtext):
-  session.execute("""
+        def edit_message_c(m_id, newtext):
+        session.execute("""
   UPDATE messages
   SET message_content = %s
   WHERE message_id = %s
   """, (newtext, uuid.UUID(m_id)))
 
-def delete_message_c(m_id):
-  session.execute("""
+        def delete_message_c(m_id):
+        session.execute("""
   DELETE FROM messages
   WHERE message_id = {0}
   """.format(m_id))

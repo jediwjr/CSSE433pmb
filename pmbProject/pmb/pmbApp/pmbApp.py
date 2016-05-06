@@ -1,4 +1,4 @@
-from flask import (Flask, render_template, request, flash, redirect, url_for, 
+from flask import (Flask, render_template, request, flash, redirect, url_for,
 session)
 import uuid
 from cassandra_functions import init_db, view_messages_c, send_message_c, edit_message_c, delete_message_c
@@ -54,7 +54,7 @@ def adduser():
         else:
             add_user(request.form['username'], request.form['password'])
             return redirect(url_for('.index'))
-    
+
 @app.route('/view_messages', methods=['GET', 'POST'])
 def view_messages():
     rows = view_messages_c()
@@ -83,7 +83,9 @@ def delete_message():
 def post_message():
     username = session['username']
     text = request.form['text']
-    send_message_c(uuid.uuid4(), text, username)
+    lon = request.form['lon']
+    lat= request.form['lat']
+    send_message_c(uuid.uuid4(), text, username, lat, lon)
     flash('Message Sent')
     return redirect(url_for('send_message'))
 
