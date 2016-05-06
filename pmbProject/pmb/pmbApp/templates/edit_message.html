@@ -1,0 +1,8 @@
+{% extends "template.html" %}
+{% block body %}
+<form action="{{ url_for('submit_edit') }}" method=post>
+    <textarea name=text  rows=5 cols=40></textarea>
+    <input type="hidden" name="m_id" value ="{{ m_id }}">
+    <input type="submit" value="Submit Edit">
+</form>
+{% endblock %}

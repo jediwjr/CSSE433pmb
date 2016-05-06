@@ -4,7 +4,16 @@
 {% endblock %}
 {% block body %}
   <h1>Welcome to Message board</h1>
+<<<<<<< HEAD
   <a href="{{ url_for('view_messages') }}">View messages</a></br>
   <a href="{{ url_for('send_message') }}">Send a message</a></br>
   <a href="{{ url_for('send_geo') }}">Send a geo message</a></br>
+=======
+  <div class=post_message>
+    <a href="{{ url_for('view_messages') }}">View messages</a></br>
+  </div>
+  <div class=post_message>
+    <a href="{{ url_for('send_message') }}">Send a message</a></br>
+  </div>
+>>>>>>> master
 {% endblock %}

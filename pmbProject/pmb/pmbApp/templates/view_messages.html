@@ -1,8 +1,25 @@
 {% extends "template.html" %}
   <title>Messages</title>
 {% block body %}
-  {% for msg in messages %}
-    <strong>Text:</strong> {{ msg }} </br>
-  {% endfor %}
+  {% set chunks = chunklist(returned, 5) %}
+  {% for chunk in chunks %}
+    <div class='row'>
+      {% for msg in chunk %}
+      <div class='post_message'>
+          {% if session.username == msg[2] %}
+          <form action="{{ url_for('edit_message') }}" method=post>
+            <input type="hidden" name="msg_id" value={{ msg[0] }}>
+            <input type="submit" value=Edit>
+          </form>
+          <form action="{{ url_for('delete_message') }}" method=post>
+            <input type="hidden" name="msg_id" value={{ msg[0] }}>
+            <input type="submit" Value=&#10006>
+          </form>
+          {% endif %}
+          <strong>Text:</strong> {{ msg[1] }} </br>
+          <strong>User:</strong> {{ msg[2] }} </br>
+      </div>
+      {% endfor %}
+    </div>
+   {% endfor %}
 {% endblock %}
-
