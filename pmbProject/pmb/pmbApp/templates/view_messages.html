@@ -1,4 +1,4 @@
-{% extends "template.html" %}
+{% extends "template.ht ml" %}
   <title>Messages</title>
 {% block body %}
   {% set chunks = chunklist(returned, 5) %}
@@ -6,7 +6,7 @@
     <div class='row'>
       {% for msg in chunk %}
       <div class='post_message'>
-          {% if session.username == msg[2] and not(session.username == '') %}
+          {% if session.username == msg[4] and not(session.username == '') %}
           <form action="{{ url_for('edit_message') }}" method=post>
             <input type="hidden" name="msg_id" value={{ msg[0] }}>
             <input type="submit" value=Edit>
@@ -16,8 +16,9 @@
             <input type="submit" Value=&#10006>
           </form>
           {% endif %}
-          <strong>Text:</strong> {{ msg[1] }} </br>
-          <strong>User:</strong> {{ msg[2] }} </br>
+          <!-- The text should be index 3, user index 4 -->
+          <strong>Text:</strong> {{ msg[3] }} </br>
+          <strong>User:</strong> {{ msg[4] }} </br>
       </div>
       {% endfor %}
     </div>

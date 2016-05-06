@@ -5,8 +5,8 @@
     <dl>
         <dt>Text:
         <dd><textarea name=text  rows=5 cols=40></textarea>
-        <input type='hidden' name = 'lon' value = ''>
-        <input type='hidden' name = 'lat' value = ''>
+        <input type='hidden' name ='lon' value ='0'>
+        <input type='hidden' name ='lat' value ='0'>
         <dd><input type=submit value=Send>
     </dl>
 </form>
@@ -37,8 +37,8 @@ $(document).ready(function() {
     function processGeolocationResult(position) {
         html5Lat = position.coords.latitude; //Get latitude
         html5Lon = position.coords.longitude; //Get longitude
-        $("#lon").html(html5Lon);
-        $("#lat").html(html5Lat);
+        $('input[name="lon"]').val(html5Lon);
+        $('input[name="lat"]').val(html5Lat);
         html5TimeStamp = position.timestamp; //Get timestamp
         html5Accuracy = position.coords.accuracy; //Get accuracy in meters
         return (html5Lat).toFixed(8) + ", " + (html5Lon).toFixed(8);
