@@ -1,7 +1,7 @@
 from cassandra.cluster import Cluster
 import uuid
 
-cluster = Cluster()
+cluster = Cluster(['137.112.104.138'])
 session = cluster.connect()
 
 def init_db():
@@ -23,7 +23,7 @@ def view_messages_c():
 
 def send_message_c(m_id,text, username):
   session.execute("""
-  INSERT INTO messages (message_id, message_content, message_sender) 
+  INSERT INTO messages (message_id, message_content, message_sender)
   VALUES (%s, %s, %s)
   """,
   (m_id, text, username))
