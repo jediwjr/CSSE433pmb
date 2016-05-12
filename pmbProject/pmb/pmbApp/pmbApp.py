@@ -61,21 +61,12 @@ def view_messages():
     returned = [row for row in rows]
     return render_template('view_messages.html', returned=returned, chunklist=chunkList)
 
-@app.route('/edit_message', methods=['GET', 'POST'])
+@app.route('/edit_message', methods=['GET'])
 def edit_message():
-  msg_id = request.args.get('msg_id')
+  msg_id = request.args.get('msgid')
   newtext = request.args.get('newtext')
   edit_message_c(msg_id, newtext)
-  redirect(url_for('view_messages'))
-#    if(request.form['msg_id']):
-#        return render_template('edit_message.html', m_id=request.form['msg_id'])
-#    else:
-#        return redirect(url_for('view_messages'))
-
-@app.route('/submit_edit', methods=['GET','POST'])
-def submit_edit():
-    edit_message_c(request.form['m_id'], request.form['text'])
-    return redirect(url_for('view_messages'))
+  return redirect(url_for('view_messages'))
 
 @app.route('/delete_message', methods=['GET', 'POST'])
 def delete_message():
