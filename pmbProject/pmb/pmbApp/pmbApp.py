@@ -63,10 +63,14 @@ def view_messages():
 
 @app.route('/edit_message', methods=['GET', 'POST'])
 def edit_message():
-    if(request.form['msg_id']):
-        return render_template('edit_message.html', m_id=request.form['msg_id'])
-    else:
-        return redirect(url_for('view_messages'))
+  msg_id = request.args.get('msg_id')
+  newtext = request.args.get('newtext')
+  edit_message_c(msg_id, newtext)
+  redirect(url_for('view_messages'))
+#    if(request.form['msg_id']):
+#        return render_template('edit_message.html', m_id=request.form['msg_id'])
+#    else:
+#        return redirect(url_for('view_messages'))
 
 @app.route('/submit_edit', methods=['GET','POST'])
 def submit_edit():

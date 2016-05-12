@@ -4,6 +4,7 @@ html {
 }
 
 h1 {
+  background-color: #B8B8B8;
   text-align: center;
 }
 
@@ -55,6 +56,7 @@ body {
 }
 
 .post_message {
+  position: relative;
   background-color: #FFFFCC;
   color: black;
   width: 200px;
@@ -70,6 +72,29 @@ body {
 
 .post_message:hover input {
   display: block;
+  float:right;
+}
+
+.post_message button {
+  display: none;
+}
+
+.post_message:hover button {
+  display: block;
+  float:right;
+}
+
+.post_message_text[contentEditable='true'] {
+  background-color: white;
+}
+
+.post_message_author {
+  position: absolute;
+  bottom: 0;
+}
+
+.submit_button input {
+  display:block;
   float:right;
 }
 

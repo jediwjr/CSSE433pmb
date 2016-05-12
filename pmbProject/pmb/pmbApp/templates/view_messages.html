@@ -1,4 +1,4 @@
-{% extends "template.ht ml" %}
+{% extends "template.html" %}
   <title>Messages</title>
 {% block body %}
   {% set chunks = chunklist(returned, 5) %}
@@ -6,19 +6,46 @@
     <div class='row'>
       {% for msg in chunk %}
       <div class='post_message'>
-          {% if session.username == msg[4] and not(session.username == '') %}
-          <form action="{{ url_for('edit_message') }}" method=post>
-            <input type="hidden" name="msg_id" value={{ msg[0] }}>
-            <input type="submit" value=Edit>
-          </form>
-          <form action="{{ url_for('delete_message') }}" method=post>
-            <input type="hidden" name="msg_id" value={{ msg[0] }}>
-            <input type="submit" Value=&#10006>
-          </form>
-          {% endif %}
+            {% if session.username == msg[4] and not(session.username == '') %}
+            <form action="" method=post>
+              <input type="hidden" name="msg_id" value={{ msg[0] }}>
+              <input type="submit" value="Like">
+            </form>
+           <!--  <form action="{{ url_for('edit_message') }}" method=post>
+              <input type="hidden" name="msg_id" value={{ msg[0] }}>
+              <input type="submit" value=Edit>
+            </form> -->
+           <input type="button" value="Edit" onclick="enable_edit('{{ msg[0] }}')" />
+            <form action="{{ url_for('delete_message') }}" method=post>
+              <input type="hidden" name="msg_id" value={{ msg[0] }}>
+              <input type="submit" Value=&#10006>
+            </form>
+            <script type="text/javascript">
+              function enable_edit(msg_id) {
+                var elem = document.getElementById(msg_id);
+                elem.contentEditable = 'true';
+                var button = document.createElement("input");
+                button.type = "button";
+                button.value = "Submit";
+                button.onclick = function() {
+                  var request = new XMLHttpRequest();
+                  request.open("POST", "/edit_message", true);
+                  var postVars = 'msgid='+msg_id+'&newtext='+elem.innerHTML;
+                  request.send(postVars);
+                }
+                document.getElementById("sb").appendChild(button);
+              }
+            </script>
+            {% endif %}
+          </br></br>
           <!-- The text should be index 3, user index 4 -->
-          <strong>Text:</strong> {{ msg[3] }} </br>
-          <strong>User:</strong> {{ msg[4] }} </br>
+          <div class='post_message_text' id="{{ msg[0] }}">
+            {{ msg[3] }} </br>
+          </div>
+          <div class='submit_button' id='sb'></div>
+          <div class="post_message_author">
+            Posted by {{ msg[4] }} </br>
+          </div>
       </div>
       {% endfor %}
     </div>
