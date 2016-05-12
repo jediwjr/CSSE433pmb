@@ -57,7 +57,8 @@ body {
 
 .post_message {
   position: relative;
-  background-color: #FFFFCC;
+  /*background-color: #FFFFCC;*/
+  background-image: url('post_background.jpg');
   color: black;
   width: 200px;
   height: 200px;
