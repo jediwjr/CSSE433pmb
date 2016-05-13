@@ -1,0 +1,6 @@
+1. sort
+2. %s format for int
+3. cqlengine index
+4. SimplyQuerySet ModelQuerySet
+5. cqlengine batch object
+

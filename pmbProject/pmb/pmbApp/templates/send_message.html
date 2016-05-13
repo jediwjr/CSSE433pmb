@@ -2,10 +2,45 @@
 <title>Send Message</title>
 {% block body %}
 <form action="{{ url_for('post_message') }}" method=post class=send-msg>
-  <dl>
-    <dt>Text:
-    <dd><textarea name=text  rows=5 cols=40></textarea>
-    <dd><input type=submit value=Send>
-  </dl>
+    <dl>
+        <dt>Text:
+        <dd><textarea name=text  rows=5 cols=40></textarea>
+        <input type='hidden' name ='lon' value ='0'>
+        <input type='hidden' name ='lat' value ='0'>
+        <dd><input type=submit value=Send>
+    </dl>
 </form>
+
+
+<script type="text/javascript" charset="utf-8">
+
+$(document).ready(function() {
+    var currgeocoder;
+    var longitude;
+
+    //Set geo location lat and long
+
+    navigator.geolocation.getCurrentPosition(function(position, html5Error) {
+
+        geo_loc = processGeolocationResult(position);
+        currLatLong = geo_loc.split(",");
+        initializeCurrent(currLatLong[0], currLatLong[1]);
+
+    });
+
+    //Get geo location result
+
+    function processGeolocationResult(position) {
+        html5Lat = position.coords.latitude; //Get latitude
+        html5Lon = position.coords.longitude; //Get longitude
+        $('input[name="lon"]').val(html5Lon);
+        $('input[name="lat"]').val(html5Lat);
+        html5TimeStamp = position.timestamp; //Get timestamp
+        html5Accuracy = position.coords.accuracy; //Get accuracy in meters
+        return (html5Lat).toFixed(8) + ", " + (html5Lon).toFixed(8);
+    }
+
+});
+
+</script>
 {% endblock %}

@@ -1,0 +1,298 @@
+To install cassandra python driver cassandra-driver, please follow the instruction in previous pages. 
+
+Once you have the driver installed, you are ready to begin. 
+The rest of commands, I will use interactive shell. And '>>>' indicate a python command, rests are comments.
+
+>>> from from cassandra.cluster import Cluster
+>>> cluster = Cluster()
+
+
+Right now, the assumption is that the connection is on local machine. You also can connect to multiple nodes:
+>>> cluster = Cluster(['137.112.40.139', '137.112.104138']) # This connect 2 IPs (our node 1 and node 2)
+
+If you already have a KEYSPACE in Cassandra, you can directly connect to the KEYSPACE
+>>> session = cluster.connect('task2')
+
+Or, you can just connect to Cassandra and create your KEYSPACE
+>>> session - cluster.connect()
+>>> session.execute("""CREATE KEYSPACE IF NOT EXISTS task2 
+					WITH replication = {'class':'SimpleStrategy', 'replication_factor':3};""") 
+
+>>> session.set_keyspace('task2')
+>>> session.execute('USE task2')
+You can also use 'sek_keyspace()' or executing "USE <keyspace>" to switch a keyspace
+
+
+In Cassandra python driver, most executing ccommands are just string parsing.
+You execute the exactly same CQL query in python as in Cassandra shell command.
+
+
+
+
+>>session.execute("""CREATE TABLE courses (c_number text PRIMARY KEY, c_name text, instructor text, cap int, days_of_week set<text>, period set<int>, room text);""")
+Create TABLE courses and set PRIMARY KEY and data tpyes for each columns. 
+
+>>> session.execute("""INSERT INTO courses(c_number, c_name, instructor, cap, days_of_week, period, room) VALUES('CSSE433-01', 'Advanced Database Systems','mohan', 24, {'M','T','R','F'}, {4}, 'O157')""")
+>>> session.execute("""INSERT INTO courses(c_number, c_name, instructor, cap, days_of_week, period, room) VALUES( %s, %s, %s, %s, %s, %s, %s)""",('CSSE333-01', 'Intro to Database Systems','mohan', 24, {'M','W','F'}, {1,2}, 'O269'))
+Two different ways to insert data into table in KEYSPACE. One is to give the values directly, and the other one is parse the value via string format. One thing to pay attention is in the second way, even if your desire data type is integer, you still need a string format '%s' indicator. 
+
+ c_number   | c_name                    | cap | days_of_week         | instructor | period | room
+------------+---------------------------+-----+----------------------+------------+--------+------
+ CSSE333-01 | Intro to Database Systems |  24 |      {'F', 'M', 'W'} |      mohan | {1, 2} | O269
+ CSSE433-01 | Advanced Database Systems |  24 | {'F', 'M', 'R', 'T'} |      mohan |    {4} | O157
+
+
+Now assume we have another CSSE333, and we have wrong instructor
+>>> session.execute("""INSERT INTO courses(c_number, c_name, instructor, cap, days_of_week, period, room) VALUES( %s, %s, %s, %s, %s, %s, %s)""",('CSSE333-02', 'Intro to Database Systems','mohan', 24, {'M','W','F'}, {5,6}, 'O269'))
+ 
+ c_number   | c_name                    | cap | days_of_week         | instructor | period | room
+------------+---------------------------+-----+----------------------+------------+--------+------
+ CSSE333-01 | Intro to Database Systems |  24 |      {'F', 'M', 'W'} |      mohan | {1, 2} | O269
+ CSSE333-02 | Intro to Database Systems |  24 |      {'F', 'M', 'W'} |      mohan | {5, 6} | O269
+ CSSE433-01 | Advanced Database Systems |  24 | {'F', 'M', 'R', 'T'} |      mohan |    {4} | O157
+
+
+In python, we can edit instructors information by INSERT or UPDATE
+>>> session.execute("""INSERT INTO courses(c_number, c_name, instructor, cap, days_of_week, period, room) VALUES( %s, %s, %s, %s, %s, %s, %s)""",('CSSE333-02', 'Intro to Database Systems','wilkin', 24, {'M','W','F'}, {5,6}, 'O269'))
+>>> session.execute("UPDATE courses SET instructor = 'wilkin' where c_number = 'CSSE333-02' ")
+Both queries give us the following result:
+
+ c_number   | c_name                    | cap | days_of_week         | instructor | period | room
+------------+---------------------------+-----+----------------------+------------+--------+------
+ CSSE333-01 | Intro to Database Systems |  24 |      {'F', 'M', 'W'} |      mohan | {1, 2} | O269
+ CSSE333-02 | Intro to Database Systems |  24 |      {'F', 'M', 'W'} |     wilkin | {5, 6} | O269
+ CSSE433-01 | Advanced Database Systems |  24 | {'F', 'M', 'R', 'T'} |      mohan |    {4} | O157
+
+Using the 'INSERT' way, as long as your primay key is consistent, you can modify other information. 
+Using the 'UPDATE' way, is like what we did in relational database. We specify a table we want to update, set the value and give the condition.
+
+
+Now, assume we will not offer CSSE333-02, we can delete it. 
+>>> session.execute("DELETE FROM courses where c_number = 'CSSE333-02'")
+
+ c_number   | c_name                    | cap | days_of_week         | instructor | period | room
+------------+---------------------------+-----+----------------------+------------+--------+------
+ CSSE333-01 | Intro to Database Systems |  24 |      {'F', 'M', 'W'} |      mohan | {1, 2} | O269
+ CSSE433-01 | Advanced Database Systems |  24 | {'F', 'M', 'R', 'T'} |      mohan |    {4} | O157
+
+And you can also delete a column. 
+>>> session.execute("DELETE room FROM courses WHERE c_number = 'CSSE333-01'")
+
+ c_number   | c_name                    | cap | days_of_week         | instructor | period | room
+------------+---------------------------+-----+----------------------+------------+--------+------
+ CSSE333-01 | Intor to Database Systems |  24 |      {'F', 'M', 'W'} |      mohan | {1, 2} | null
+ CSSE433-01 | Advanced Database Systems |  24 | {'F', 'M', 'R', 'T'} |      mohan |    {4} | O157
+
+Cassandra does take 'null' string as a string. In our trail, if we delete room info for course CSSE333-01, it will return a null value.
+While we update romm inof as a 'null' string,  the data type of room info of CSSE333-01 is going to be a string. 
+
+
+In cassandra, we cannot search on a non primay key directly. In order to search, we need to create index on these non primay key columns
+
+>>> result = session.execute("select * from courses where instructor = 'mohan'")
+InvalidRequest: code=2200 [Invalid query] message="No supported secondary index found for the non primary key columns restrictions"
+
+An error will occur if we want to search on a non primary key without index.
+
+
+>>> session.execute("CREATE INDEX ON courses (c_name)");
+>>> session.execute("CREATE INDEX ON courses (instructor)");
+>>> session.execute("CREATE INDEX ON courses (room)");
+After creating index, we can search on thess columns. However, since our primary key is course number, the result is ordered by the primay key. 
+
+>>> result = session.execute("select * from courses where instructor = 'mohan'")
+>>> for row in result:
+...    print row
+
+Row(c_number=u'CSSE333-01', c_name=u'Intro to Database Systems', cap=24, days_of_week=SortedSet([u'F', u'M', u'W']), instructor=u'mohan', period=SortedSet([1, 2]), room=u'O269')
+Row(c_number=u'CSSE433-01', c_name=u'Advanced Database Systems', cap=24, days_of_week=SortedSet([u'F', u'M', u'R', u'T']), instructor=u'mohan', period=SortedSet([4]), room=u'O157')
+
+
+
+
+
+
+
+Cassandra python drive also support Object Mapper. This is migrated from legacy cqlengin, and now integrated into this driver. So you don't need to install additional package to use this feature. 
+
+
+In cqlengine, a CQL table is represented by a model. This model is a python class and defines basic properties and columns for a table. Each column in the model maps to the column in the CQL table. As CQL table, you need at least one primary key column and one non-primary key column in a model. The order how you define your columns in model is the same order they are defined in the corresponding table. 
+
+Now we are going to use this model to create table in CQL.
+
+>>> from cassandra.cqlengine import columns
+>>> from cassandra.cqlengine.models import Model
+>>> class students(Model):
+	    username = columns.Text(primary_key=True)
+	    first_name = columns.Text()
+	    last_name = columns.Text()
+	    email = columns.Text()
+	    standing = columns.Text()
+	
+
+Now we define a model. Next step is to setup connection to the database and sync the model/table to the database. 
+
+>>> from cassandra.cqlengine import connection
+>>> from cassandra.cqlengine.management import sync_table
+>>> connection.setup(['137.112.40.139'],'task2')
+>>> sync_table(students)
+
+Now a table has been created in our KEYSPACE, and we can verify in cqlsh
+> describe tables
+students  courses
+
+And we can insert some rows
+>>> student1 = students.create(username = 'xuez', first_name = 'Zhihao', last_name = 'Xue', email = 'xuez@rose-hulman.edu', standing = 'GR')
+>>> student2 = students.create(username = 'wuj', first_name = 'Jiaren', last_name = 'Wu', email = 'wuj@rose-hulman.edu', standing = 'SR')
+>>> student3 = students.create(username = 'raspst', first_name = 'Steven', last_name = 'Rasp', email = 'raspst@rose-hulman.edu', standing = 'JR')
+>>> student4 = students.create(username = 'gaysojj', first_name = 'Joshua', last_name = 'Gayso', email = 'gaysojj@rose-hulman.edu', standing = 'JR')
+
+Now the table looks like:
+ username | email                  | first_name | last_name | standing
+----------+------------------------+------------+-----------+----------
+     xuez |   xuez@rose-hulman.edu |     Zhihao |       Xue |     GRAD
+   raspst | raspst@rose-hulman.edu |     Steven |      Rasp |       JR
+      wuj |    wuj@rose-hulman.edu |     Jiaren |        Wu |       SR
+
+
+We can count how many rows are in this table:
+>>> students.objects.count()
+3
+
+Like we can use query to retrieve data in CQL shell, we also can retrieve objects in Python. This is accomplished with QuerySet objects. 
+
+Retrieving all objects from students table using .all() method. 
+>>> all_students = students.objects.all()
+>>> for student in all_students:
+		print student
+
+students <username=xuez>
+students <username=raspst>
+students <username=wuj>
+
+If your database is large and you want to limit number of records retrieved, you can use .limit() method to limit the number of results. When use .limit(v) method
+Cassandra will return the first v number in the table. 
+
+>>> for student in students.objects().limit(2):
+		print student.username
+gaysojj
+xuez
+
+
+Sometimes, we only need some fields of an object, using .filter(\*\*) method can help us achieve this. 
+As mentioned before, we need to create an index on non-primary key column, otherwise, the database will complain about this action. 
+
+To retrieve student whose username is 'xuez' and count how many records we have
+>>> filtered_students = students.objects.filter(username ='xuez')
+>>> filtered_students.count()
+1
+>>> for student in filtered_sutdents:
+		print student
+students <username=xuez>
+
+IMPORTANT!!! So far, we did not find how to create an index using cqlengine. So if you want to create an index on a non-primary key column, you must specify when you create the model! Even you create an index using cqlsh, cqlengine seems not be happy with that. 
+
+So, we have to drop the students table and recreate. 
+
+Create new model with index
+>>> class students(Model):
+	    username = columns.Text(primary_key=True)
+	    first_name = columns.Text(index=True)
+	    last_name = columns.Text(index=True)
+	    email = columns.Text(index=True)
+	    standing = columns.Text(index=True)
+
+After recreate table and insert test data, now we can filter on non-primary key column. 
+
+>>> filtered_students = students.objects.filter(standing='JR')
+>>> filtered_students.count()
+2
+
+This retrieve all students whose standing is 'JR'
+To get student's username from retrieved data
+>>> for student in filtered_students:
+	print student.username
+
+gaysojj
+raspst
+
+
+Filtering Operators
+Like MongoDB, Cassandra also supports operators to filter data by appending a __<op> to the field name on filtering call. 
+
+in a range (__in)
+> (__gt)
+>= (__gte)
+< (__lt)
+<= (__lte)
+CONTAINS (__contains)
+
+
+Delete
+To delete a record, we can simply call .delete() method. 
+>>> students(username = 'gaysojj').delete()
+delete student whose username is 'gaysojj'
+
+
+
+Update
+>>> student4 = students.create(username = 'gaysojj', first_name = 'Joshua', last_name = 'Gayso', email = 'gaysojj@rose-hulman.edu', standing = 'SR')
+ username | email                   | first_name | last_name | standing
+----------+-------------------------+------------+-----------+----------
+  gaysojj | gaysojj@rose-hulman.edu |     Joshua |     Gayso |       SR
+
+>>> students(username='gaysojj').update(standing = 'JR')
+students(username='gaysojj', first_name=None, last_name=None, email=None, standing='JR')
+
+
+Connect to a table in KEYSPACE but not created by model
+We can use named tables to querying a table without creating a model. This is helpful especially when you are not familiar with a database. 
+
+>>> from cqlengine.connection import setup
+>>> from clqengine.named import NamedTable
+>>> setup(['137.112.40.139'], 'task2') 
+# The host ip address must be a list. Even thought the documentation gives a string, Cassandra will send you an error if you do so. 
+>>> courses.objects()[0] # retrieve the first course in the courses table
+{u'days_of_week': SortedSet([u'F', u'M', u'W']), u'instructor': u'mohan', u'c_name': u'Intro to Database Systems', u'room': u'O269', u'cap': 24, u'period': SortedSet([1, 2]), u'c_number': u'CSSE333-01'}
+
+If you call a filter operation on both Named Tables and Model class, you will get two different types of objects returned. 
+>>> courses.objects.filter(room = 'O269') # Named table filter operation
+<cqlengine.query.SimpleQuerySet object at 0x7fcfa0cf1f90>
+# this is a SimpleQuereySet
+>>> students.objects.filter(standing = 'SR') # Model class
+<cassandra.cqlengine.query.ModelQuerySet object at 0x7fcfa0160050>
+# this is a ModelQuerySet
+
+
+Batch Queries
+cqlengine use BathcQuery class to support batch queries. Batch queries combines multiple data modification operation such as insert, update and delete into a single logical operation. Batching multiple statements will short network exchanges between client/server and server coordinator/replicas. However, batches is not a good idea to optimize performance. It is useful to synchronize data to tables is a legitimate operation. 
+When execute a batch query, if a row is out of the database and you are trying to read it, this batch query will fail. 
+
+
+
+
+create a new table to record students' registration
+>>> class registrations(Model):
+		c_number = columns.Text(primary_key=True)
+	    username = columns.Text(primary_key=True)
+	    
+>>> sync_table(registrations)
+
+>>> from cassandra.cluster import Cluster
+>>> cluster = Cluster()
+>>> session = cluster.connect('task2')
+>>> batch.add("INSERT INTO registrations (c_number, username) VALUES (%s, %s)"),('CSSE433-01', 'xuez')
+>>> batch.add("INSERT INTO registrations (c_number, username) VALUES (%s, %s)"),('CSSE433-01', 'wuj')
+>>> batch.add("INSERT INTO registrations (c_number, username) VALUES (%s, %s)"),('CSSE433-01', 'raspst')
+>>> session.execute(batch)
+
+ c_number   | username
+------------+----------
+ CSSE433-01 |   raspst
+ CSSE433-01 |      wuj
+ CSSE433-01 |     xuez
+
+
+ 
+
+

@@ -1,11 +1,16 @@
+## Task 1
+
+#### To Do
+* CQL commands:
+```sql
 CREATE KEYSPACE IF NOT EXISTS inventory WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor': 1}
 /* Create a KEYSPACE in Cassandra if the keyspace name does not exist. To simplify, we will just use simple strategy and use only 1 replication factor. */
 use inventory; /* switch to 'inventory' keyspace */
-CREATE TABLE IF NOT EXISTS parts (part_number text, description text, compatibility set<text>, price int, manufacturer text, PRIMARY KEY(（part_number)， price);
+CREATE TABLE IF NOT EXISTS parts (part_number text, description text, compatibility set<text>, price int, manufacturer text, PRIMARY KEY((part_number), price));
 /* create a parts table */
 INSERT INTO parts (part_number, description, compatibility, price, manufacturer) VALUES ('FRU324534', '128G NVMe PCIe M.2 SSD', {'W540', 'W541'}, 127, 'Samsung') IF NOT EXISTS ;
 INSERT INTO parts (part_number, description, compatibility, price, manufacturer) VALUES ('FRU235123', '2133MHz DDR3 16GB Memory', {'DIMM'}, 70, 'Samsung') IF NOT EXISTS ;
-INSERT INTO parts (part_number, description, compatibility, price, manufacturer) VALUES ('FRU324531', '2133MHz DDR3 16GB Memory', {'DIMM'}, 65, 'Corsair') IF NOT EXISTS ;
+INSERT INTO parts (part_number, description, compatibility, price, manufacturer) VALUES ('FRU235123', '2133MHz DDR3 16GB Memory', {'DIMM'}, 65, 'Corsair') IF NOT EXISTS ;
 INSERT INTO parts (part_number, description, compatibility, price, manufacturer) VALUES ('FRU385271', 'DVD-ROM', {'T530','T540','W540'}, 30, 'Lenovo') IF NOT EXISTS ;
 /* insert data into part table */
 /* This is how parts table looks like */
@@ -25,12 +30,15 @@ INSERT INTO manufacturers (name, home_page_url, NASDAQ_code, customer_service_nu
 
 SELECT * FROM manufacturers
 /* show all manufacuters' info */
-name    | customer_service_number | home_page_url                | nasdaq_code
+ name    | customer_service_number | home_page_url                | nasdaq_code
 ---------+-------------------------+------------------------------+-------------
  Corsair |            888-222-4346 | http://www.corsair.com/en-us |        CRSR
  Samsung |            800-726-7864 |   http://www.samsung.com/us/ |       SSNLF
   Lenovo |            855-253-6686 | http://www.lenovo.com/us/en/ |       LNVGY
+```
 
+* Search by manufacturer name
+```sql
 /* In order to search a non-primary key, you need to create an index on the column */
 CREATE INDEX IF NOT EXISTS parts_manu ON parts (manufacturer);
 CREATE INDEX IF NOT EXISTS ON parts (price);
@@ -42,3 +50,16 @@ SELECT * FROM parts where manufacturer = 'Samsung' ;
 -------------+------------------+--------------------------+--------------+-------
    FRU235123 |         {'DIMM'} | 2133MHz DDR3 16GB Memory |      Samsung |    70
    FRU324534 | {'W540', 'W541'} |   128G NVMe PCIe M.2 SSD |      Samsung |   127
+
+```
+
+* Sort by price in descending order for a particular part
+```sql
+SELECT * FROM parts WHERE part_number = 'FRU235123' ORDER BY price DESC;
+
+ part_number | price | compatibility | description              | manufacturer
+-------------+-------+---------------+--------------------------+--------------
+   FRU235123 |    70 |      {'DIMM'} | 2133MHz DDR3 16GB Memory |      Samsung
+   FRU235123 |    65 |      {'DIMM'} | 2133MHz DDR3 16GB Memory |      Corsair
+
+```
