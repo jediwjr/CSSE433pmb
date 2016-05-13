@@ -40,6 +40,7 @@
                 button.type = "button";
                 button.value = "Submit";
                 button.onclick = function() {
+<<<<<<< HEAD
                     var request = new XMLHttpRequest();
                     request.open("POST", "/edit_message", true);
                     var postVars = 'msgid='+msg_id+'&newtext='+elem.innerHTML;
@@ -59,6 +60,33 @@
         {{ msg[3] }} </br>
         lat: {{ msg[1] }} </br>
         lon: {{ msg[2] }} </br>
+=======
+                  elem.contentEditable = 'false';
+                  this.remove();
+                  var request = new XMLHttpRequest();
+                  reqtext = "http://localhost:5000/edit_message?msgid="+msg_id+"&newtext="+elem.innerHTML;
+                  request.open("GET", reqtext, true);
+                  request.send();
+                }
+                document.getElementById("b-"+msg_id).appendChild(button);
+              }
+            </script>
+            {% endif %}
+            </br></br></br>
+          <!-- The text should be index 3, user index 4 -->
+          <div class='post_message_text' id="{{ msg[0] }}">
+            {{ msg[3] }}
+          </div>
+
+          <div class='submit_button' id='b-{{ msg[0] }}'></div>
+          {% if msg[4] != '' %}
+          <div class="post_message_author">
+            Posted by {{ msg[4] }} </br>
+          </div>
+          {% endif %}
+      </div>
+      {% endfor %}
+>>>>>>> master
     </div>
 
     <script>
