@@ -1,21 +1,32 @@
 {% extends "template.html" %}
-  <title>Messages</title>
+<title>Messages</title>
 {% block body %}
-  {% set chunks = chunklist(returned, 5) %}
-  {% for chunk in chunks %}
-    <div class='row'>
-      {% for msg in chunk %}
-      <div class='post_message'>
-            {% if session.username == msg[4] and not(session.username == '') %}
-            <form action="" method=post>
-              <input type="hidden" name="msg_id" value={{ msg[0] }}>
-              <input type="submit" value="Like">
-            </form>
+<body>
+  <p>Set the distence</p>
+  <form>
+    Distance: <input type="number" id="distance" value="-1"><br>
+  </form>
+  <button onclick="setFilter()">Set Filter</button>
+  <p>Click the button to refresh your coordinates.</p>
+  <button onclick="getLocation()">Refresh Location</button>
+  <p id="locationP"></p>
+</body>
+
+{% set chunks = chunklist(returned, 5) %}
+{% for chunk in chunks %}
+<div class='row'>
+  {% for msg in chunk %}
+  <div class='post_message'>
+    {% if session.username == msg[4] and not(session.username == '') %}
+    <form action="" method=post>
+      <input type="hidden" name="msg_id" value={{ msg[0] }}>
+      <input type="submit" value="Like">
+    </form>
            <!--  <form action="{{ url_for('edit_message') }}" method=post>
               <input type="hidden" name="msg_id" value={{ msg[0] }}>
               <input type="submit" value=Edit>
             </form> -->
-           <input type="button" value="Edit" onclick="enable_edit('{{ msg[0] }}')" />
+            <input type="button" value="Edit" onclick="enable_edit('{{ msg[0] }}')" />
             <form action="{{ url_for('delete_message') }}" method=post>
               <input type="hidden" name="msg_id" value={{ msg[0] }}>
               <input type="submit" Value=&#10006>
@@ -39,20 +50,110 @@
               }
             </script>
             {% endif %}
-            </br></br></br>
-          <!-- The text should be index 3, user index 4 -->
-          <div class='post_message_text' id="{{ msg[0] }}">
-            {{ msg[3] }}
+          </br></br></br>
+          <input type='hidden' name ='lon' value ={{msg[2]}}>
+          <input type='hidden' name ='lat' value ={{msg[1]}}>
+          <input type='hidden' name ='messageDiv' value = {{msg[0]}}>
+
+          <!-- The text should be index 3, user index 4, lat 1, lon 2 -->
+          <div class='post_message_text' id={{msg[0]}}>
+            {{ msg[3] }} </br>
+            lat: {{ msg[1] }} </br>
+            lon: {{ msg[2] }} </br>
           </div>
 
-          <div class='submit_button' id='b-{{ msg[0] }}'></div>
-          {% if msg[4] != '' %}
-          <div class="post_message_author">
-            Posted by {{ msg[4] }} </br>
-          </div>
-          {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-   {% endfor %}
+          <script>
+
+            var y = document.getElementsByName("messageDiv");
+            var lon2s = document.getElementsByName("lon");
+            var lat2s = document.getElementsByName("lat");
+            lat1 = position.coords.latitude; 
+            lon1 =  position.coords.longitude;    
+
+            function setFilter(){
+              d = document.getElementById("distance").value;
+              if (d == -1) {
+                d = 40040;
+              }else{
+                d  = d / 1000;
+              }
+
+              for (var i = y.length - 1; i >= 0; i--) {
+                var id = y[i].value;
+                var lon2 = lon2s[i].value;
+                var lat2 = lat2s[i].value;
+                distanceFilter(lon1,lat1,lon2,lat2,d,id);
+              }
+            }
+
+            function distanceFilter(lon1,lat1,lon2,lat2,d,id){
+              messageDiv = document.getElementById(id);
+    var R = 6378.137; // Radius of the earth in km
+    var dLat = (lat2-lat1) * Math.PI / 180;  // Javascript functions in radians
+    var dLon = (lon2-lon1) * Math.PI / 180; 
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var distance = R * c; // Distance in km
+    distance = distance * 1000;
+    var result = d * 1000 - distance;
+    if (result <= 0) {
+      messageDiv.innerHTML = "Send from " + distance.toFixed(2) +" meters (too far)";
+    }else{
+      messageDiv.innerHTML = "Send from " + distance.toFixed(2) +" meters";
+
+    }
+  }
+</script>
+
+<div class='submit_button' id='b-{{ msg[0] }}'></div>
+{% if msg[4] != '' %}
+<div class="post_message_author">
+  Posted by {{ msg[4] }} </br>
+</div>
+
+{% endif %}
+</div>
+{% endfor %}
+</div>
+{% endfor %}
+
+<script>
+
+  getLocation();
+
+  var x = document.getElementById("locationP");
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else { 
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+
+  function showPosition(position) {
+    lat1 = position.coords.latitude; 
+    lon1 =  position.coords.longitude;  
+
+    x.innerHTML = "Latitude: " + position.coords.latitude + 
+    "<br>Longitude: " + position.coords.longitude;  
+  }
+
+  function showError(error) {
+    switch(error.code) {
+      case error.PERMISSION_DENIED:
+      x.innerHTML = "User denied the request for Geolocation."
+      break;
+      case error.POSITION_UNAVAILABLE:
+      x.innerHTML = "Location information is unavailable."
+      break;
+      case error.TIMEOUT:
+      x.innerHTML = "The request to get user location timed out."
+      break;
+      case error.UNKNOWN_ERROR:
+      x.innerHTML = "An unknown error occurred."
+      break;
+    }
+  }
+</script>
 {% endblock %}

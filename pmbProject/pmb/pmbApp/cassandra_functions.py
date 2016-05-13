@@ -1,7 +1,7 @@
 from cassandra.cluster import Cluster
 import uuid
 
-cluster = Cluster()
+cluster = Cluster(['137.112.40.137'])
 session = cluster.connect()
 
 def init_db():
