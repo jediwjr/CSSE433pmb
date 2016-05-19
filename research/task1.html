@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+</head>
+<body>
+<h2 id="task-1">Task 1</h2>
+<h4 id="to-do">To Do</h4>
+<ul>
+<li>CQL commands:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> KEYSPACE <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> inventory <span class="kw">WITH</span> REPLICATION = {<span class="st">&#39;class&#39;</span> : <span class="st">&#39;SimpleStrategy&#39;</span>, <span class="st">&#39;replication_factor&#39;</span>: <span class="dv">1</span>}
+<span class="co">/* Create a KEYSPACE in Cassandra if the keyspace name does not exist. To simplify, we will just use simple strategy and use only 1 replication factor. */</span>
+<span class="kw">use</span> inventory; <span class="co">/* switch to &#39;inventory&#39; keyspace */</span>
+<span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> parts (part_number text, description text, <span class="kw">compatibility</span> set&lt;text&gt;, price <span class="dt">int</span>, manufacturer text, <span class="kw">PRIMARY</span> <span class="kw">KEY</span>((part_number), price));
+<span class="co">/* create a parts table */</span>
+<span class="kw">INSERT</span> <span class="kw">INTO</span> parts (part_number, description, <span class="kw">compatibility</span>, price, manufacturer) <span class="kw">VALUES</span> (<span class="st">&#39;FRU324534&#39;</span>, <span class="st">&#39;128G NVMe PCIe M.2 SSD&#39;</span>, {<span class="st">&#39;W540&#39;</span>, <span class="st">&#39;W541&#39;</span>}, <span class="dv">127</span>, <span class="st">&#39;Samsung&#39;</span>) <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ;
+<span class="kw">INSERT</span> <span class="kw">INTO</span> parts (part_number, description, <span class="kw">compatibility</span>, price, manufacturer) <span class="kw">VALUES</span> (<span class="st">&#39;FRU235123&#39;</span>, <span class="st">&#39;2133MHz DDR3 16GB Memory&#39;</span>, {<span class="st">&#39;DIMM&#39;</span>}, <span class="dv">70</span>, <span class="st">&#39;Samsung&#39;</span>) <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ;
+<span class="kw">INSERT</span> <span class="kw">INTO</span> parts (part_number, description, <span class="kw">compatibility</span>, price, manufacturer) <span class="kw">VALUES</span> (<span class="st">&#39;FRU235123&#39;</span>, <span class="st">&#39;2133MHz DDR3 16GB Memory&#39;</span>, {<span class="st">&#39;DIMM&#39;</span>}, <span class="dv">65</span>, <span class="st">&#39;Corsair&#39;</span>) <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ;
+<span class="kw">INSERT</span> <span class="kw">INTO</span> parts (part_number, description, <span class="kw">compatibility</span>, price, manufacturer) <span class="kw">VALUES</span> (<span class="st">&#39;FRU385271&#39;</span>, <span class="st">&#39;DVD-ROM&#39;</span>, {<span class="st">&#39;T530&#39;</span>,<span class="st">&#39;T540&#39;</span>,<span class="st">&#39;W540&#39;</span>}, <span class="dv">30</span>, <span class="st">&#39;Lenovo&#39;</span>) <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ;
+<span class="co">/* insert data into part table */</span>
+<span class="co">/* This is how parts table looks like */</span>
+ part_number | <span class="kw">compatibility</span>            | description              | manufacturer | price
+<span class="co">-------------+--------------------------+--------------------------+--------------+-------</span>
+   FRU235123 |                 {<span class="st">&#39;DIMM&#39;</span>} | 2133MHz DDR3 16GB Memory |      Samsung |    <span class="dv">70</span>
+   FRU235123 |                 {<span class="st">&#39;DIMM&#39;</span>} | 2133MHz DDR3 16GB Memory |      Corsair |    <span class="dv">65</span>
+   FRU385271 | {<span class="st">&#39;T530&#39;</span>, <span class="st">&#39;T540&#39;</span>, <span class="st">&#39;W540&#39;</span>} |                  DVD-ROM |       Lenovo |    <span class="dv">30</span>
+   FRU324534 |         {<span class="st">&#39;W540&#39;</span>, <span class="st">&#39;W541&#39;</span>} |   128G NVMe PCIe M<span class="fl">.2</span> SSD |      Samsung |   <span class="dv">127</span>
+
+<span class="kw">CREATE</span> <span class="kw">TABLE</span> <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> manufacturers (name text, home_page_url text, NASDAQ_code text,customer_service_number text, <span class="kw">PRIMARY</span> <span class="kw">KEY</span>(name));
+<span class="co">/* create manufacturers table */</span>
+<span class="kw">INSERT</span> <span class="kw">INTO</span> manufacturers (name, home_page_url, NASDAQ_code, customer_service_number) <span class="kw">VALUES</span> (<span class="st">&#39;Samsung&#39;</span>, <span class="st">&#39;http://www.samsung.com/us/&#39;</span>, <span class="st">&#39;SSNLF&#39;</span>, <span class="st">&#39;800-726-7864&#39;</span>) <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ;
+<span class="kw">INSERT</span> <span class="kw">INTO</span> manufacturers (name, home_page_url, NASDAQ_code, customer_service_number) <span class="kw">VALUES</span> (<span class="st">&#39;Corsair&#39;</span>, <span class="st">&#39;http://www.corsair.com/en-us&#39;</span>, <span class="st">&#39;CRSR&#39;</span>, <span class="st">&#39;888-222-4346&#39;</span>) <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ;
+<span class="kw">INSERT</span> <span class="kw">INTO</span> manufacturers (name, home_page_url, NASDAQ_code, customer_service_number) <span class="kw">VALUES</span> (<span class="st">&#39;Lenovo&#39;</span>, <span class="st">&#39;http://www.lenovo.com/us/en/&#39;</span>, <span class="st">&#39;LNVGY&#39;</span>, <span class="st">&#39;855-253-6686&#39;</span>) <span class="kw">IF</span> <span class="kw">NOT</span> <span class="kw">EXISTS</span> ;
+<span class="co">/* insert manufacturers&#39; inforamtion into manufacturers table */</span>
+
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> manufacturers
+<span class="co">/* show all manufacuters&#39; info */</span>
+ name    | customer_service_number | home_page_url                | nasdaq_code
+<span class="co">---------+-------------------------+------------------------------+-------------</span>
+ Corsair |            <span class="dv">888-222-4346</span> | http://www.corsair.com/en-us |        CRSR
+ Samsung |            <span class="dv">800-726-7864</span> |   http://www.samsung.com/us/ |       SSNLF
+  Lenovo |            <span class="dv">855-253-6686</span> | http://www.lenovo.com/us/en/ |       LNVGY</code></pre></div>
+<ul>
+<li>Search by manufacturer name ```sql /* In order to search a non-primary key, you need to create an index on the column */ CREATE INDEX IF NOT EXISTS parts_manu ON parts (manufacturer); CREATE INDEX IF NOT EXISTS ON parts (price);</li>
+</ul>
+<p>/* retrieve all parts info produced by Samsung <em>/ SELECT </em> FROM parts where manufacturer = 'Samsung' ;</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">part_number</th>
+<th align="left">compatibility</th>
+<th align="left">description</th>
+<th align="left">manufacturer</th>
+<th align="left">price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">FRU235123</td>
+<td align="left">{'DIMM'}</td>
+<td align="left">2133MHz DDR3 16GB Memory</td>
+<td align="left">Samsung</td>
+<td align="left">70</td>
+</tr>
+<tr class="even">
+<td align="left">FRU324534</td>
+<td align="left">{'W540', 'W541'}</td>
+<td align="left">128G NVMe PCIe M.2 SSD</td>
+<td align="left">Samsung</td>
+<td align="left">127</td>
+</tr>
+</tbody>
+</table>
+<p>```</p>
+<ul>
+<li>Sort by price in descending order for a particular part ```sql SELECT * FROM parts WHERE part_number = 'FRU235123' ORDER BY price DESC;</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th align="left">part_number</th>
+<th align="left">price</th>
+<th align="left">compatibility</th>
+<th align="left">description</th>
+<th align="left">manufacturer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">FRU235123</td>
+<td align="left">70</td>
+<td align="left">{'DIMM'}</td>
+<td align="left">2133MHz DDR3 16GB Memory</td>
+<td align="left">Samsung</td>
+</tr>
+<tr class="even">
+<td align="left">FRU235123</td>
+<td align="left">65</td>
+<td align="left">{'DIMM'}</td>
+<td align="left">2133MHz DDR3 16GB Memory</td>
+<td align="left">Corsair</td>
+</tr>
+</tbody>
+</table>
+<p>```</p>
+</body>
+</html>
