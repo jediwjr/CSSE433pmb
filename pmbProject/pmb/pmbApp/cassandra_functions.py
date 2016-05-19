@@ -23,6 +23,12 @@ def init_db():
 def view_messages_c():
   return session.execute("SELECT * FROM messages")
 
+def get_messages_c(msg_ids):
+  msgs = []
+  for msg in msg_ids:
+    msgs.append(session.execute("SELECT * FROM messages WHERE message_id = {0}".format(msg))[0])
+  return msgs
+
 def send_message_c(m_id,text, username, lat, lon):
   session.execute("""
   INSERT INTO messages (message_id, message_content, lon, lat, message_sender)

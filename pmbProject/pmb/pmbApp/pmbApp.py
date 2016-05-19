@@ -1,9 +1,9 @@
 from flask import (Flask, render_template, request, flash, redirect, url_for,
 session)
 import uuid
-from cassandra_functions import init_db, view_messages_c, send_message_c, edit_message_c, delete_message_c
+from cassandra_functions import init_db, view_messages_c, send_message_c, edit_message_c, delete_message_c, get_messages_c
 from mongo_functions import add_user, get_user
-from neo4j_functions import create_user, create_message, add_like, likes, remove_like
+from neo4j_functions import create_user, create_message, add_like, likes, remove_like, recommendation
 import hashlib
 
 app = Flask(__name__)
@@ -112,6 +112,16 @@ def unlike_message():
     msg = request.form['msg_id']
     remove_like(username,msg)
     return redirect(url_for('view_messages'))
+
+@app.route('/recommend', methods=['GET','POST'])
+def recommend():
+  username = session['username']
+  msg_ids = []
+  results = recommendation(username)
+  for result in results:
+    msg_ids.append(result['m2.msg_id'])
+  results = get_messages_c(msg_ids)
+  return render_template('view_messages.html', returned=results,chunklist=chunkList,like_func=likes)
 
 if __name__ == '__main__':
     app.secret_key = 'secret key'

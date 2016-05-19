@@ -18,3 +18,8 @@ def likes(user,msg):
     result = session.run("MATCH (u:User)-[r:LIKES]->(m:Message) WHERE u.username={username} AND m.msg_id={msg_id} RETURN r",{"username":user, "msg_id":msg})
     result = list(result)
     return len(result) >= 1
+
+def recommendation(user):
+    results = session.run("MATCH (u:User)-[:LIKES]->(m:Message)<-[:LIKES]-(u2:User) WHERE u.username = {username} MATCH (u2)-[:LIKES]->(m2:Message) WHERE m2.msg_id <> m.msg_id RETURN m2.msg_id", {"username": user})
+    results = list(results)
+    return results
