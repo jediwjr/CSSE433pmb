@@ -1,16 +1,18 @@
 {% extends "template.html" %}
 <title>Send Message</title>
 {% block body %}
+<div class='control'>
 <form action="{{ url_for('post_message') }}" method=post class=send-msg>
     <dl>
         <dt>Text:
         <dd><textarea name=text  rows=5 cols=40></textarea>
-        <dd>Expiration Time:<textarea name=time  rows=1 cols=5 >3600</textarea>s
+        <dd>Expiration Time:<textarea name=time  rows=1 cols=5 >604800</textarea> seconds
         <input type='hidden' name ='lon' value ='0'>
         <input type='hidden' name ='lat' value ='0'>
         <dd><input type=submit value=Send>
     </dl>
 </form>
+</div>
 
 
 <script type="text/javascript" charset="utf-8">

@@ -4,6 +4,8 @@ html {
 }
 
 h1 {
+  padding:0;
+  margin:0;
   background-color: #B8B8B8;
   text-align: center;
 }
@@ -21,19 +23,21 @@ body {
 }
 
 .page a:link {
-  color: yellow;
+  color: blue;
 }
 
 .page a:visited {
-  color: orange;
+  color: purple;
 }
 
 .page a:hover {
-  color: white;
+  color: red;
 }
 
 .nav {
   float:top;
+  padding:0;
+  margin:0;
   width:100%;
   background-color:#B8B8B8;
   text-align: right;
@@ -105,4 +109,22 @@ body {
   width: 1200px;
   height: 200px;
   margin-bottom: 10px;
+}
+
+.control {
+  width: 100%;
+  padding:0;
+  margin:0;
+  color: white;
+  background-color:#B8B8B8;
+}
+
+p {
+  padding:0;
+  margin:0;
+}
+
+dl {
+  padding:0;
+  margin:0;
 }

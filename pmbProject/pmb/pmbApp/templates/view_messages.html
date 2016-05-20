@@ -1,7 +1,6 @@
 {% extends "template.html" %}
-<title>Messages</title>
 {% block body %}
-<body>
+<div class='control'>
   <p>Set the distence</p>
   <form>
     <input type="number" id="distance" value="-1">(Range: meter)<br>
@@ -21,7 +20,7 @@
     <input type="submit" value="Recommend!">
   </form>
   {% endif %}
-</body>
+</div>
 
 {% set chunks = chunklist(returned, 5) %}
 {% for chunk in chunks %}

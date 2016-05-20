@@ -26,7 +26,9 @@ def view_messages_c():
 def get_messages_c(msg_ids):
   msgs = []
   for msg in msg_ids:
-    msgs.append(session.execute("SELECT * FROM messages WHERE message_id = {0}".format(msg))[0])
+    item = session.execute("SELECT * FROM messages WHERE message_id = {0}".format(msg))
+    for a in item:
+      msgs.append(a)
   return msgs
 
 def send_message_c(m_id,text, username, lat, lon, time):
