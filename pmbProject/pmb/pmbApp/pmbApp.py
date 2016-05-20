@@ -25,6 +25,7 @@ def login():
             return redirect(url_for('login'))
         else:
             session['logged_in'] = True
+            session['anonymous'] = False
             session['username'] = request.form['username']
             return redirect(url_for('.index'))
     return render_template('login.html', error=error)
@@ -79,7 +80,9 @@ def delete_message():
 
 @app.route('/post_message', methods=['POST'])
 def post_message():
-    username = session['username']
+    username = ''
+    if(not(session['anonymous'])):
+        username = session['username']
     text = request.form['text']
     lon = request.form['lon']
     lat= request.form['lat']
@@ -122,6 +125,11 @@ def recommend():
     msg_ids.append(result['m2.msg_id'])
   results = get_messages_c(msg_ids)
   return render_template('view_messages.html', returned=results,chunklist=chunkList,like_func=likes)
+
+@app.route('/toggle_anon', methods=['GET','POST'])
+def toggle_anon():
+    session['anonymous'] = not(session['anonymous'])
+    return redirect(request.referrer)
 
 if __name__ == '__main__':
     app.secret_key = 'secret key'

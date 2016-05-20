@@ -14,6 +14,11 @@
       <a href="{{ url_for('login') }}">Log in</a>
     {% else %}
       <a href="{{ url_for('logout') }}">Log out</a>
+      {% if not session.anonymous %}
+        <a href="{{ url_for('toggle_anon') }}">Go Anonymous</a>
+      {% else %}
+        <a href="{{ url_for('toggle_anon') }}">Stop Anonymous</a>
+      {% endif %}
     {% endif %}
     <a href="{{ url_for('signup') }}">Sign up</a>
     <a href="{{ url_for('.index') }}">Home</a>
