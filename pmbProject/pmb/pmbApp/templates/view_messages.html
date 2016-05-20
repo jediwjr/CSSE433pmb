@@ -4,11 +4,17 @@
 <body>
   <p>Set the distence</p>
   <form>
-    Distance: <input type="number" id="distance" value="-1"><br>
+    <input type="number" id="distance" value="-1">(Range: meter)<br>
+  </form>
+  <form>
+    <input type="number" id="localLat" value="-1">(Latitude)<br>
+  </form>
+  <form>
+    <input type="number" id="localLon" value="-1">(Lontitude)<br>
   </form>
   <button onclick="setFilter()">Set Filter</button>
-  <p>Click the button to refresh your coordinates.</p>
-  <button onclick="getLocation()">Refresh Location</button>
+  
+  <button onclick="getLocation()">Get current location</button>
   <p id="locationP"></p>
   {% if session.logged_in %}
   <form action="{{ url_for('recommend') }}" method=post>
@@ -80,8 +86,6 @@
             var y = document.getElementsByName("messageDiv");
             var lon2s = document.getElementsByName("lon");
             var lat2s = document.getElementsByName("lat");
-            lat1 = position.coords.latitude; 
-            lon1 =  position.coords.longitude;    
 
             function setFilter(){
               d = document.getElementById("distance").value;
@@ -95,6 +99,10 @@
                 var id = y[i].value;
                 var lon2 = lon2s[i].value;
                 var lat2 = lat2s[i].value;
+                lattext = document.getElementById("localLat");
+                lontext = document.getElementById("localLon");
+                lat1 = lattext.value;
+                lon1 = lontext.value;
                 distanceFilter(lon1,lat1,lon2,lat2,d,id);
               }
             }
@@ -148,10 +156,11 @@
 
   function showPosition(position) {
     lat1 = position.coords.latitude; 
-    lon1 =  position.coords.longitude;  
-
-    x.innerHTML = "Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude;  
+    lon1 =  position.coords.longitude;
+    lattext = document.getElementById("localLat");
+    lontext = document.getElementById("localLon");
+    lattext.value = lat1;
+    lontext.value = lon1;
   }
 
   function showError(error) {
