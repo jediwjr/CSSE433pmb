@@ -58,6 +58,8 @@ body {
 .post_message {
   position: relative;
   /*background-color: #FFFFCC;*/
+  word-break: break-all;
+  word-wrap: break-word;
   background-image: url('post_background.jpg');
   color: black;
   width: 200px;

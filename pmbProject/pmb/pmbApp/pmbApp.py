@@ -13,6 +13,7 @@ def index():
     init_db()
     if(not(session.get('logged_in'))):
         session['username'] = ''
+        session['anonymous'] = False
     return render_template('index.html', methods=['GET, POST'])
 
 @app.route('/login', methods=['GET', 'POST'])

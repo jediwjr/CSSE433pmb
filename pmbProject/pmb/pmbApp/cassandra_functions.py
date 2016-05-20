@@ -35,7 +35,7 @@ def send_message_c(m_id,text, username, lat, lon, time):
   VALUES (%s, %s, %s, %s, %s)
   USING TTL %s;
   """,
-  (m_id, text,lon,lat, username,time))
+  (m_id, text,lon,lat, username, int(time)))
 
 def edit_message_c(m_id, newtext):
   session.execute("""

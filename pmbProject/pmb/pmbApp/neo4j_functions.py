@@ -1,5 +1,5 @@
 from neo4j.v1 import GraphDatabase, basic_auth
-driver = GraphDatabase.driver("bolt://localhost", auth=basic_auth("neo4j", "Yellowsubmarine49"))
+driver = GraphDatabase.driver("bolt://137.112.40.137", auth=basic_auth("neo4j", "Yellowsubmarine49"))
 session = driver.session()
 
 def create_user(un):

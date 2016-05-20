@@ -10,9 +10,11 @@
   <p>Click the button to refresh your coordinates.</p>
   <button onclick="getLocation()">Refresh Location</button>
   <p id="locationP"></p>
+  {% if session.logged_in %}
   <form action="{{ url_for('recommend') }}" method=post>
     <input type="submit" value="Recommend!">
   </form>
+  {% endif %}
 </body>
 
 {% set chunks = chunklist(returned, 5) %}
