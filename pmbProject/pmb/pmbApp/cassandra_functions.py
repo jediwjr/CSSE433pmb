@@ -1,13 +1,16 @@
 from cassandra.cluster import Cluster
+from cassandra import ConsistencyLevel
+from cassandra.policies import DCAwareRoundRobinPolicy
 import uuid
 
-cluster = Cluster(['137.112.40.137'])
+cluster = Cluster(['137.112.40.137', '137.112.104.138', '137.112.40.139'], load_balancing_policy=DCAwareRoundRobinPolicy()) 
 session = cluster.connect()
+#session.default_consistency_level=ConsistencyLevel.ONE
 
 def init_db():
   session.execute("""
   CREATE KEYSPACE IF NOT EXISTS messageboard
-  WITH REPLICATION={ 'class': 'SimpleStrategy', 'replication_factor' : 1 };
+  WITH REPLICATION={ 'class': 'SimpleStrategy', 'replication_factor' : 3 };
   """)
   session.execute("USE messageboard")
   session.execute("""
