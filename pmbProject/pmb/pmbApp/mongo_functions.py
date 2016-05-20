@@ -1,7 +1,7 @@
 import pymongo
 from pymongo import MongoClient
 import hashlib
-client = MongoClient()
+client = MongoClient('137.112.104.138')
 db = client.messageboard
 def get_user(username, password):
   users = db['users']

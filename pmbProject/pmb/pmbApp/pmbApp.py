@@ -87,7 +87,8 @@ def post_message():
     lon = request.form['lon']
     lat= request.form['lat']
     msg_id = uuid.uuid4()
-    send_message_c(msg_id, text, username, lat, lon)
+    time = request.form['time']
+    send_message_c(msg_id, text, username, lat, lon, time)
     create_message(str(msg_id))
     flash('Message Sent')
     return redirect(url_for('send_message'))

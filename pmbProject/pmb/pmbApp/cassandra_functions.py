@@ -29,12 +29,13 @@ def get_messages_c(msg_ids):
     msgs.append(session.execute("SELECT * FROM messages WHERE message_id = {0}".format(msg))[0])
   return msgs
 
-def send_message_c(m_id,text, username, lat, lon):
+def send_message_c(m_id,text, username, lat, lon, time):
   session.execute("""
   INSERT INTO messages (message_id, message_content, lon, lat, message_sender)
   VALUES (%s, %s, %s, %s, %s)
+  USING TTL %s;
   """,
-  (m_id, text,lon,lat, username))
+  (m_id, text,lon,lat, username,time))
 
 def edit_message_c(m_id, newtext):
   session.execute("""
